@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ETL app</title>
+
+
+
+  <!-- Semantic ui -->
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
+  <!-- Jquery  -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Datatables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+  <!-- Datatables Styles -->
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/dataTables.semanticui.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
+  <!-- Application stylesheet -->
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <!-- google fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body>
+  <div class="main-wrapper">
+    <div class="main-header">Internet Movie Database</div>
+    <img class="main-logo" src="http://svgur.com/i/6qq.svg">
+    <div class="main-description">
+      Just simply pick up your favourite genre and perform ETL process.
+    </div>
+    <div class="select-container">
+      <div class="big ui floating dropdown labeled search icon button">
+        <i class="film icon"></i>
+        <span class="text">Science-Fiction</span>
+        <div class="menu">
+          <div class="item">Science-Fiction</div>
+        </div>
+      </div>
+      <button id="etl-button" class="ui blue big button">ETL</button>
+    </div>
+    <span class="main-steps-description"> OR <br> perform process step by step. </span>
+    <div class="main-etl-steps">
+      <div id="extract-button" class="blue ui animated button" tabindex="0">
+        <div class="visible content">Extract</div>
+        <div class="hidden content">
+          <i class="right arrow icon"></i>
+        </div>
+      </div>
+      <div id="transform-button" class="ui animated button disabled" tabindex="0">
+        <div class="visible content">Transform</div>
+        <div class="hidden content">
+          <i class="right arrow icon"></i>
+        </div>
+      </div>
+      <div id="load-button" class="ui animated button disabled" tabindex="0">
+        <div class="visible content">Load</div>
+        <div class="hidden content">
+          <i class="right arrow icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="drop-table-container">
+      <div id="drop-table-button" class="ui animated fade red button disabled" tabindex="0">
+        <div class="visible content">Do not press</div>
+        <div class="hidden content">
+          Drop a table
+        </div>
+      </div>
+    </div>
+    <div class="spinner-container not-displayed">
+      <div class="half-circle-spinner">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+      </div>
+    </div>
+    <div class="table-container not-visible">
+      <table id="example" class="display ui celled table" style="width:100%">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Index</th>
+            <th>Rank</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Director</th>
+            <th>Runtime</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Income</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
