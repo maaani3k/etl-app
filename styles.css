@@ -46,6 +46,12 @@
     display: flex;
 }
 
+.information-container {
+    font-size: 18px;
+    margin-top: 10px;
+    text-align: left;
+}
+
 /* reactive classes */
 
 .not-visible {
@@ -64,12 +70,12 @@
 }
 
 td.details-control {
-    background: url('../resources/details_open.png') no-repeat center center;
+    background: url('./assets/details_open.png') no-repeat center center;
     cursor: pointer;
 }
 
 tr.shown td.details-control {
-    background: url('../resources/details_close.png') no-repeat center center;
+    background: url('./assets/details_close.png') no-repeat center center;
 }
 
 /* spinner */

@@ -20,7 +20,7 @@ $('#extract-button').click(function () {
             $('#transform-button').removeClass('disabled')
             $('#transform-button').addClass('blue')
             $('#extract-button').addClass('green')
-            console.log(filmData);
+            $('#informations').append('<div> Data from IMDb extracted successfuly. <strong>'+ filmData.length + ' elements </strong> extracted. </div>')
         }
     });
 });
@@ -42,6 +42,7 @@ $('#transform-button').click(function () {
             $('#load-button').removeClass('disabled')
             $('#transform-button').addClass('green')
             $('#load-button').addClass('blue')
+            $('#informations').append('<div> Data from IMDb transformed successfuly. <strong>'+ filmData.length + ' elements </strong> transformed. </div>')
         }
     });
 });
@@ -65,6 +66,8 @@ $('#load-button').click(function () {
             data = resp;
             console.log("Server data:");
             console.log(resp);
+            $('#informations').append('<div> Data from IMDb loaded to database successfuly. <strong>'+ data.length + ' elements </strong> loaded/updated. </div>')
+
 
             var table = $('#example').DataTable({
                 data: resp,
@@ -84,7 +87,16 @@ $('#load-button').click(function () {
                     { data: 'rating' },
                     { data: 'votes' },
                     { data: 'income' }
-
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                             columns: [1,2,3,4,5,6,7,8,9] 
+                         }
+             
+                    },
                 ]
             });
             $('#example tbody').on('click', 'td.details-control', function () {
@@ -126,7 +138,8 @@ $('#drop-table-button').click(function () {
             $('#transform-button').removeClass('blue')
             $('#load-button').removeClass('blue')
 
-            let dropCount = resp;
+            // let dropCount = resp;
+            $('#informations').html('Database dropped successfuly. <strong>'+ resp.movieCount + ' elements </strong> deleted from database.')
             console.log(dropCount);
         })
 })
@@ -165,6 +178,8 @@ $('#etl-button').click(function () {
             data = resp;
             console.log("Server data:");
             console.log(resp);
+            $('#informations').append('<div> Extracted, transformed and loaded data to database successfuly. <strong>'+ data.length + ' elements </strong> loaded/updated. </div>')
+
 
             var table = $('#example').DataTable({
                 data: resp,
@@ -185,6 +200,16 @@ $('#etl-button').click(function () {
                     { data: 'votes' },
                     { data: 'income' }
 
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                             columns: [1,2,3,4,5,6,7,8,9] 
+                         }
+             
+                    },
                 ]
             });
             $('#example tbody').on('click', 'td.details-control', function () {
