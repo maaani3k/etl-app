@@ -1,27 +1,28 @@
-let filmData;
+let filmData; // zmienna daty załadowania filmów
 
 // extract data from website function
+// guzik akcja -> funkcja ładuje dane ze st
 $('#extract-button').click(function () {
-    $('#extract-button').addClass('disabled')
-    $('#etl-button').addClass('disabled')
+    $('#extract-button').addClass('disabled')//wyłacza przycisk
+    $('#etl-button').addClass('disabled')// etl główny
 
     let genreUrl = {
-        url: $('.ui.dropdown').dropdown('get value')
+        url: $('.ui.dropdown').dropdown('get value')// wybiera url na podstawie gatunku filmu
     }
 
-    $.ajax({
+    $.ajax({ // w zależności od URL generuje dane filmów req POST do servera
         url: "http://localhost:4000/api/extract",
         type: "POST",
         data: JSON.stringify(genreUrl),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (resp) {
+        success: function (resp) { //jeśli bez błędu nasza data filmów to odpowiedź servera (dane przypisuje do zmienniej)
             filmData = resp;
-            $('#transform-button').removeClass('disabled')
+            $('#transform-button').removeClass('disabled') //odblokowuje guzik dodaje niebieski kolor
             $('#transform-button').addClass('blue')
-            $('#extract-button').addClass('green')
+            $('#extract-button').addClass('green')// po zakończeniu przypisuje zielony
             $('#informations').append('<div> Data from IMDb extracted successfuly. <strong>'+ filmData.length + ' elements </strong> extracted. </div>')
-        }
+        }// do div id=informations przypisuje komunikat o sukcesie akcji / funkcji - filmy w zmiennej filmData
     });
 });
 
@@ -32,53 +33,53 @@ $('#transform-button').click(function () {
     $.ajax({
         url: "http://localhost:4000/api/transform",
         type: "POST",
-        data: JSON.stringify(filmData),
+        data: JSON.stringify(filmData), // wysyłamy dane ze zmiennej do servera i robimy transform na serwerze
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (resp) {
+        success: function (resp) {  // po sukcesie przypisuje przetransformowane dane do zmienniej filmData
             console.log("Pure jQuery Pure JS object");
             filmData = resp;
             console.log('transform res', resp)
-            $('#load-button').removeClass('disabled')
+            $('#load-button').removeClass('disabled') // tak jak wyżej
             $('#transform-button').addClass('green')
             $('#load-button').addClass('blue')
             $('#informations').append('<div> Data from IMDb transformed successfuly. <strong>'+ filmData.length + ' elements </strong> transformed. </div>')
-        }
+        } // komunikat jak wyżej
     });
 });
 
 // load data function
 $('#load-button').click(function () {
-    $('#load-button').addClass('disabled')
+    $('#load-button').addClass('disabled') // wyłącza przysick
 
     $.ajax({
         url: "http://localhost:4000/api/load",
         type: "POST",
-        data: JSON.stringify(filmData),
+        data: JSON.stringify(filmData), // wysyła dane przetransformowane do servera a server obłsuguje zapytanie i zapisuje do bazy danych
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (resp) {
+        success: function (resp) { // sukcess tak jak wyżej
             $('#load-button').addClass('green')
             $('#drop-table-button').removeClass('disabled')
 
             $('.table-container').removeClass('not-visible')
             $('.spinner-container').addClass('not-displayed')
-            data = resp;
+            filmData = resp;
             console.log("Server data:");
             console.log(resp);
-            $('#informations').append('<div> Data from IMDb loaded to database successfuly. <strong>'+ data.length + ' elements </strong> loaded/updated. </div>')
+            $('#informations').append('<div> Data from IMDb loaded to database successfuly. <strong>'+ filmData.length + ' elements </strong> loaded/updated. </div>')
+// tak jak wyżej
 
-
-            var table = $('#example').DataTable({
+            var table = $('#example').DataTable({ // tworzenie tabeli po stronie aplikacji do wyświetlenia wyniku
                 data: resp,
-                columns: [
+                columns: [ // kolumna z przyciskiem (zieolonym)
                     {
                         "className": 'details-control',
                         "orderable": false,
                         "data": null,
                         "defaultContent": ''
                     },
-                    { data: 'index' },
+                    { data: 'index' }, //reszta kolumn
                     { data: 'rank' },
                     { data: 'title' },
                     { data: 'year' },
@@ -88,18 +89,18 @@ $('#load-button').click(function () {
                     { data: 'votes' },
                     { data: 'income' }
                 ],
-                dom: 'Bfrtip',
+                dom: 'Bfrtip', // przycisk csv
                 buttons: [
                     {
                         extend: 'csv',
                         exportOptions: {
-                             columns: [1,2,3,4,5,6,7,8,9] 
+                             columns: [1,2,3,4,5,6,7,8,9] // kolumny zapisane w pliku .csv
                          }
-             
+
                     },
                 ]
             });
-            $('#example tbody').on('click', 'td.details-control', function () {
+            $('#example tbody').on('click', 'td.details-control', function () { // funkcja która pokazuje szczegóły o filmie
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
 
@@ -119,7 +120,7 @@ $('#load-button').click(function () {
 });
 
 //  droping table request
-$('#drop-table-button').click(function () {
+$('#drop-table-button').click(function () { // fukcja która kasuje dane z tabeli i bazy danych
     $('#drop-table-button').addClass('disabled')
     $('.table-container ').addClass('not-visible')
 
@@ -127,11 +128,11 @@ $('#drop-table-button').click(function () {
     $('#transform-button').removeClass('green')
     $('#load-button').removeClass('green')
 
-    fetch("http://localhost:4000/api/drop")
+    fetch("http://localhost:4000/api/drop") // pobiera informacje o wykasowanej ilości danych z bazy i usuwa dane z bazy
         .then(resp => resp.json())
         .then(resp => {
             let table = $('#example').DataTable();
-            table.destroy();
+            table.destroy(); // niszczy tabelę
             $('#extract-button').removeClass('disabled')
             $('#extract-button').addClass('blue')
             $('#etl-button').removeClass('disabled')
@@ -139,12 +140,19 @@ $('#drop-table-button').click(function () {
             $('#load-button').removeClass('blue')
 
             // let dropCount = resp;
+            setTimeout(
+  function()
+  {
+    location.reload();
+    //waits for refresh to go ready
+  }, 1500);
             $('#informations').html('Database dropped successfuly. <strong>'+ resp.movieCount + ' elements </strong> deleted from database.')
             console.log(dropCount);
         })
 })
 
 function format(d) {
+  // funkcja przekształcająca rząd aby był rozwijalny (wykorzystaba przy tworzeniu tabeli - zielony przycisk)
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
         '<tr>' +
@@ -164,7 +172,7 @@ function format(d) {
 
 // doin complex etl process by request and sending data to datatable
 
-$('#etl-button').click(function () {
+$('#etl-button').click(function () { // robi wszystko na serverze jak wyżej
     $('#etl-button').addClass('loading disabled')
     $('#extract-button').addClass('disabled')
     $('.spinner-container').removeClass('not-displayed')
@@ -206,9 +214,9 @@ $('#etl-button').click(function () {
                     {
                         extend: 'csv',
                         exportOptions: {
-                             columns: [1,2,3,4,5,6,7,8,9] 
+                             columns: [1,2,3,4,5,6,7,8,9]
                          }
-             
+
                     },
                 ]
             });
@@ -232,6 +240,7 @@ $('#etl-button').click(function () {
 });
 
 // picking up genre dropdown
+// funkcja która tworzy listę wysuwalną gatunków filmów
 $('.ui.dropdown')
     .dropdown({
         values: [
@@ -322,6 +331,3 @@ $('.ui.dropdown')
             }
         ]
     });
-
-
-
